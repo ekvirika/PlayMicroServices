@@ -31,7 +31,7 @@ namespace Play.Inventory.Service.Controllers
             
             var inventoryItemDtos = inventoryItemEntities.Select(inventoryItem =>
             {
-                var catalogItem = catalogItems.Single(catalogItem => catalogItem.Id == inventoryItem.Id);
+                var catalogItem = catalogItems.Single(catalogItem => catalogItem.Id == inventoryItem.CatalogItemId);
                 return inventoryItem.CastDto(catalogItem.Name, catalogItem.Description);
             });
             return Ok(inventoryItemDtos);

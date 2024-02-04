@@ -48,3 +48,11 @@ d:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\obj\Debu
 d:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\obj\Debug\net5.0\ref\Play.Inventory.Service.dll
 d:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\obj\Debug\net5.0\Play.Inventory.Service.pdb
 d:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\obj\Debug\net5.0\Play.Inventory.Service.genruntimeconfig.cache
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Microsoft.Extensions.Http.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Microsoft.Extensions.Http.Polly.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Microsoft.Extensions.Logging.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Polly.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\Polly.Extensions.Http.dll
+D:\Projects\PlayMicroServices\Play.Inventory\src\Play.Inventory.Service\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
