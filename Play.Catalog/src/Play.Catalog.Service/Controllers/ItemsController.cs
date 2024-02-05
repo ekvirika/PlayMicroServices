@@ -1,13 +1,19 @@
 // controller to manage catalog items
 
+/* After adding MassTransit, we define this class as a Producer.
+And every Consumer, that is listening to the Queue, will get notified, when 
+an item is created, updated or deleted. */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Service.Dtos;
 using Play.Catalog.Service.Entities;
 using Play.Common;
+using Play.Catalog.Contracts;
 
 namespace Play.Catalog.Service.Controllers
 {
@@ -18,32 +24,20 @@ namespace Play.Catalog.Service.Controllers
     {
         /* Dependency Injection */
         private readonly IRepository<Item> itemsRepository;
-        private static int requestCounter = 0;
-        public ItemsController(IRepository<Item> itemsRepository)
+
+        /* This class allows us to send messages. */
+        private readonly IPublishEndpoint publishEndpoint;
+        public ItemsController(IRepository<Item> itemsRepository, IPublishEndpoint publishEndpoint)
         {
             this.itemsRepository = itemsRepository;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetAsync()
         {
-            requestCounter++;
-            Console.WriteLine($"Request {requestCounter}: Starting... ");
-
-            if (requestCounter <= 2)
-            {
-                Console.WriteLine($"Request {requestCounter}: Delaying... ");
-                await Task.Delay(TimeSpan.FromSeconds(10));
-            }
-
-            if (requestCounter <= 4)
-            {
-                Console.WriteLine($"Request {requestCounter}: 500 (Internal Server error)... ");
-                return StatusCode(500);
-            }
             var items = (await itemsRepository.GetAllAsync())
                         .Select(item => item.CastDto());
-            Console.WriteLine($"Request {requestCounter}: 200 (Success!) ");
             return Ok(items);
         }
 
@@ -70,6 +64,9 @@ namespace Play.Catalog.Service.Controllers
             };
             await itemsRepository.CreateAsync(item);
 
+            /* We need to send message via RabbitMQ that the new item has been created. */
+            await publishEndpoint.Publish(new CatalogItemCreated(item.Id, item.Name, item.Description));
+
             return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item);
         }
 
@@ -82,6 +79,10 @@ namespace Play.Catalog.Service.Controllers
             existingItem.Description = updateItemDto.Description;
             existingItem.Price = updateItemDto.Price;
             await itemsRepository.UpdateAsync(existingItem);
+
+            /* We need to send message via RabbitMQ that the new item has been created. */
+            await publishEndpoint.Publish(new CatalogItemUpdated(existingItem.Id, existingItem.Name, existingItem.Description));
+
             return NoContent();
         }
 
@@ -91,6 +92,10 @@ namespace Play.Catalog.Service.Controllers
             var existingItem = await itemsRepository.GetOneAsync(id);
             if (existingItem == null) return NotFound();
             await itemsRepository.RemoveAsync(id);
+
+            /* We need to send message via RabbitMQ that the new item has been created. */
+            await publishEndpoint.Publish(new CatalogItemDeleted(existingItem.Id));
+
             return NoContent();
         }
     }
